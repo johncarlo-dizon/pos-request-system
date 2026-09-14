@@ -1,0 +1,1131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Business Case: Additional POS Unit Request</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0f7ff',
+                            100: '#e0effe',
+                            500: '#0284c7',
+                            600: '#0369a1',
+                            700: '#095180',
+                            800: '#0c426e',
+                            900: '#0c3559',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+            body {
+                background: white !important;
+                color: black !important;
+                font-size: 11pt;
+            }
+            .print-container {
+                box-shadow: none !important;
+                border: none !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                max-width: 100% !important;
+            }
+            .page-break {
+                page-break-inside: avoid;
+            }
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 font-sans min-h-screen pb-12">
+
+    <!-- Sticky Header & Quick Action Bar -->
+    <header class="no-print sticky top-0 z-50 bg-slate-900 text-white shadow-md border-b border-slate-800">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-wrap justify-between items-center gap-4">
+            <div class="flex items-center space-x-3">
+                <div class="bg-sky-500 text-white p-2 rounded-lg font-bold text-lg">
+                    <i class="fa-solid fa-calculator"></i>
+                </div>
+                <div>
+                    <h1 class="text-base font-bold leading-tight">POS Request System</h1>
+                    <p class="text-xs text-slate-400">Doc Ref: <span class="font-mono text-sky-400 font-semibold">BC-POS-2026-001</span></p>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex items-center space-x-2 sm:space-x-3">
+                <button type="button" onclick="loadSampleData()" class="px-3 py-1.5 text-xs font-medium bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-md transition flex items-center gap-1.5 shadow-sm">
+                    <i class="fa-solid fa-wand-magic-sparkles text-amber-400"></i>
+                    <span>Load Sample Data</span>
+                </button>
+                <button type="button" onclick="resetForm()" class="px-3 py-1.5 text-xs font-medium bg-slate-800 hover:bg-rose-950/40 text-slate-300 hover:text-rose-400 border border-slate-700 hover:border-rose-800/50 rounded-md transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-rotate-left"></i>
+                    <span>Reset</span>
+                </button>
+                <button type="button" onclick="window.print()" class="px-3.5 py-1.5 text-xs font-semibold bg-sky-600 hover:bg-sky-500 text-white rounded-md transition flex items-center gap-1.5 shadow">
+                    <i class="fa-solid fa-print"></i>
+                    <span>Print / Save PDF</span>
+                </button>
+            </div>
+        </div>
+        <!-- Live Form Progress Bar -->
+        <div class="w-full bg-slate-800 h-1.5">
+            <div id="formProgressBar" class="bg-sky-500 h-1.5 transition-all duration-300 ease-out" style="width: 0%"></div>
+        </div>
+    </header>
+
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
+        <form id="posRequestForm" onsubmit="handleFormSubmit(event)" class="print-container bg-white rounded-xl shadow-xl border border-slate-200 overflow-hidden">
+            
+            <!-- Document Header Banner -->
+            <div class="p-6 sm:p-8 bg-gradient-to-r from-slate-900 via-slate-800 to-sky-950 text-white relative border-b border-slate-700">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div>
+                        <div class="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-sky-500/20 text-sky-300 border border-sky-400/30 mb-2">
+                            <i class="fa-solid fa-file-lines text-xs"></i> Formal Business Case
+                        </div>
+                        <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight">ADDITIONAL POS UNIT REQUEST</h2>
+                        <p class="text-sm text-slate-300 mt-1">Submit enterprise justification for capital allocation & hardware deployment</p>
+                    </div>
+
+                    <div class="flex flex-col sm:items-end gap-2">
+                        <div class="text-xs text-slate-400 font-mono">Ref: <span class="text-white font-bold">BC-POS-2026-001</span></div>
+                        <div id="leadTimeBadge" class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                            <i class="fa-solid fa-clock"></i>
+                            <span>Lead Time: Standard 60–90 Days</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-6 sm:p-8 space-y-10">
+
+                <!-- SECTION 1: REQUEST INFORMATION -->
+                <section class="space-y-4">
+                    <div class="flex items-center gap-3 border-b border-slate-200 pb-2">
+                        <span class="flex items-center justify-center w-7 h-7 rounded-full bg-sky-100 text-sky-700 font-bold text-sm">1</span>
+                        <h3 class="text-lg font-bold text-slate-900 tracking-tight">Request Information</h3>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <!-- Store Name & Code -->
+                        <div>
+                            <label for="storeInfo" class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">Store Name / Store Code <span class="text-rose-500">*</span></label>
+                            <input type="text" id="storeInfo" name="storeInfo" required placeholder="e.g. Metro Flagship - STR-402" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-lg text-slate-800 text-sm focus:ring-2 focus:ring-sky-500 focus:bg-white focus:outline-none transition">
+                        </div>
+
+                        <!-- Store Manager -->
+                        <div>
+                            <label for="storeManager" class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">Requested By (Store Manager) <span class="text-rose-500">*</span></label>
+                            <input type="text" id="storeManager" name="storeManager" required placeholder="e.g. Maria Santos" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-lg text-slate-800 text-sm focus:ring-2 focus:ring-sky-500 focus:bg-white focus:outline-none transition">
+                        </div>
+
+                        <!-- Area/District Manager -->
+                        <div>
+                            <label for="areaManager" class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">Area / District Manager <span class="text-rose-500">*</span></label>
+                            <input type="text" id="areaManager" name="areaManager" required placeholder="e.g. Roberto Gomez" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-lg text-slate-800 text-sm focus:ring-2 focus:ring-sky-500 focus:bg-white focus:outline-none transition">
+                        </div>
+
+                        <!-- Date Pickers & Auto Calculation -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div>
+                                <label for="requestDate" class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">Request Date <span class="text-rose-500">*</span></label>
+                                <input type="date" id="requestDate" name="requestDate" required onchange="calculateLeadTime()" class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-slate-800 text-sm focus:ring-2 focus:ring-sky-500 focus:bg-white focus:outline-none transition">
+                            </div>
+
+                            <div>
+                                <label for="targetGoLiveDate" class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">Target Go-Live Date <span class="text-rose-500">*</span></label>
+                                <input type="date" id="targetGoLiveDate" name="targetGoLiveDate" required onchange="calculateLeadTime()" class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-slate-800 text-sm focus:ring-2 focus:ring-sky-500 focus:bg-white focus:outline-none transition">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Hidden field: stores the computed lead time in days for submission -->
+                    <input type="hidden" id="leadTimeDaysValue" name="leadTimeDaysValue" value="">
+
+                    <!-- Computed Lead Time Alert -->
+                    <div id="leadTimeCalcAlert" class="p-3 bg-slate-50 border border-slate-200 rounded-lg flex items-center justify-between text-xs text-slate-600">
+                        <div class="flex items-center gap-2">
+                            <i class="fa-solid fa-calendar-days text-sky-600"></i>
+                            <span>Calculated Deployment Lead Time:</span>
+                            <span id="calculatedDays" class="font-bold text-slate-900">-- days</span>
+                        </div>
+                        <span id="leadTimeStatusTag" class="px-2 py-0.5 rounded font-semibold text-[11px] bg-slate-200 text-slate-700">Select dates</span>
+                    </div>
+                </section>
+
+                <!-- SECTION 2: BUSINESS JUSTIFICATION -->
+                <section class="space-y-4">
+                    <div class="flex items-center gap-3 border-b border-slate-200 pb-2">
+                        <span class="flex items-center justify-center w-7 h-7 rounded-full bg-sky-100 text-sky-700 font-bold text-sm">2</span>
+                        <div>
+                            <h3 class="text-lg font-bold text-slate-900 tracking-tight">Business Justification</h3>
+                            <p class="text-xs text-slate-500">Select primary driver and provide required specifics</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Driver Option 1 -->
+                        <div class="border rounded-xl p-4 transition duration-200 hover:border-sky-300 hover:shadow-sm bg-white cursor-pointer relative" onclick="selectPrimaryDriver('driver_sales')">
+                            <div class="flex items-start gap-3">
+                                <input type="radio" id="driver_sales" name="primaryDriver" value="Sales Volume Growth" required onchange="toggleDriverFields()" class="mt-1 text-sky-600 focus:ring-sky-500">
+                                <div class="flex-1">
+                                    <label for="driver_sales" class="font-semibold text-slate-900 text-sm cursor-pointer block">Sales & Transaction Volume Growth</label>
+                                    <p class="text-xs text-slate-500 mt-0.5">Significant sustained increase in store register traffic over recent months.</p>
+                                    
+                                    <div id="driver_sales_field" class="mt-3 hidden">
+                                        <label for="growthPercentage" class="block text-xs font-medium text-slate-700 mb-1">Transaction Volume Growth (last 3-6 mos)</label>
+                                        <div class="relative rounded-md shadow-sm">
+                                            <input type="number" min="0" max="500" id="growthPercentage" name="growthPercentage" placeholder="e.g. 28" class="w-full pr-8 pl-3 py-1.5 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:outline-none">
+                                            <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-slate-400 text-xs font-bold">%</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Driver Option 2 -->
+                        <div class="border rounded-xl p-4 transition duration-200 hover:border-sky-300 hover:shadow-sm bg-white cursor-pointer relative" onclick="selectPrimaryDriver('driver_queue')">
+                            <div class="flex items-start gap-3">
+                                <input type="radio" id="driver_queue" name="primaryDriver" value="Customer Queue Mitigation" onchange="toggleDriverFields()" class="mt-1 text-sky-600 focus:ring-sky-500">
+                                <div class="flex-1">
+                                    <label for="driver_queue" class="font-semibold text-slate-900 text-sm cursor-pointer block">Customer Queue Mitigation</label>
+                                    <p class="text-xs text-slate-500 mt-0.5">Peak hour queue duration exceeds allowable SLA threshold.</p>
+                                    
+                                    <div id="driver_queue_field" class="mt-3 grid grid-cols-2 gap-2 hidden">
+                                        <div>
+                                            <label for="currentWaitTime" class="block text-[11px] font-medium text-slate-700 mb-1">Peak Wait Time (mins)</label>
+                                            <input type="number" min="0" id="currentWaitTime" name="currentWaitTime" placeholder="e.g. 18" class="w-full px-2.5 py-1.5 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:outline-none">
+                                        </div>
+                                        <div>
+                                            <label for="targetWaitStandard" class="block text-[11px] font-medium text-slate-700 mb-1">Company Target (mins)</label>
+                                            <input type="number" min="0" id="targetWaitStandard" name="targetWaitStandard" placeholder="e.g. 5" class="w-full px-2.5 py-1.5 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:outline-none">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Driver Option 3 -->
+                        <div class="border rounded-xl p-4 transition duration-200 hover:border-sky-300 hover:shadow-sm bg-white cursor-pointer relative" onclick="selectPrimaryDriver('driver_footprint')">
+                            <div class="flex items-start gap-3">
+                                <input type="radio" id="driver_footprint" name="primaryDriver" value="Store Footprint Expansion" onchange="toggleDriverFields()" class="mt-1 text-sky-600 focus:ring-sky-500">
+                                <div class="flex-1">
+                                    <label for="driver_footprint" class="font-semibold text-slate-900 text-sm cursor-pointer block">Store Footprint Expansion</label>
+                                    <p class="text-xs text-slate-500 mt-0.5">Physical layout modifications or newly constructed counter space.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Driver Option 4 -->
+                        <div class="border rounded-xl p-4 transition duration-200 hover:border-sky-300 hover:shadow-sm bg-white cursor-pointer relative" onclick="selectPrimaryDriver('driver_seasonal')">
+                            <div class="flex items-start gap-3">
+                                <input type="radio" id="driver_seasonal" name="primaryDriver" value="Seasonal / Promo Peak" onchange="toggleDriverFields()" class="mt-1 text-sky-600 focus:ring-sky-500">
+                                <div class="flex-1">
+                                    <label for="driver_seasonal" class="font-semibold text-slate-900 text-sm cursor-pointer block">Seasonal / Promo Peak</label>
+                                    <p class="text-xs text-slate-500 mt-0.5">Anticipated surge due to upcoming campaigns, holidays, or events.</p>
+                                    
+                                    <div id="driver_seasonal_field" class="mt-3 hidden">
+                                        <label for="seasonalDetails" class="block text-xs font-medium text-slate-700 mb-1">Campaign / Event Details</label>
+                                        <input type="text" id="seasonalDetails" name="seasonalDetails" placeholder="e.g. Q4 Holiday Festival & Midnight Sale" class="w-full px-3 py-1.5 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:outline-none">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SECTION 3: IMPACT & METRICS -->
+                <section class="space-y-4">
+                    <div class="flex items-center gap-3 border-b border-slate-200 pb-2">
+                        <span class="flex items-center justify-center w-7 h-7 rounded-full bg-sky-100 text-sky-700 font-bold text-sm">3</span>
+                        <div>
+                            <h3 class="text-lg font-bold text-slate-900 tracking-tight">Impact & Metrics Comparison</h3>
+                            <p class="text-xs text-slate-500">Enter baseline metrics to calculate projected operational ROI</p>
+                        </div>
+                    </div>
+
+                    <!-- Metrics Table -->
+                    <div class="overflow-x-auto border border-slate-200 rounded-xl bg-slate-50/50 p-1">
+                        <table class="w-full text-left text-sm">
+                            <thead>
+                                <tr class="border-b border-slate-200 text-slate-600 text-xs uppercase tracking-wider bg-slate-100/80">
+                                    <th class="py-3 px-4 font-semibold">Key Metric</th>
+                                    <th class="py-3 px-4 font-semibold">Current Baseline</th>
+                                    <th class="py-3 px-4 font-semibold">Projected Target (With POS)</th>
+                                    <th class="py-3 px-4 font-semibold text-right">Expected Uplift</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-200 bg-white">
+                                <!-- Peak Transactions -->
+                                <tr>
+                                    <td class="py-3 px-4 font-medium text-slate-900">
+                                        Peak Hour Transactions
+                                        <span class="block text-xs text-slate-500 font-normal">Items / hour processed</span>
+                                    </td>
+                                    <td class="py-3 px-4">
+                                        <input type="number" id="currTx" name="currTx" min="0" placeholder="45" oninput="calculateMetrics()" class="w-full max-w-[130px] px-3 py-1.5 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-sky-500 focus:outline-none">
+                                    </td>
+                                    <td class="py-3 px-4">
+                                        <input type="number" id="projTx" name="projTx" min="0" placeholder="70" oninput="calculateMetrics()" class="w-full max-w-[130px] px-3 py-1.5 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-sky-500 focus:outline-none">
+                                    </td>
+                                    <td class="py-3 px-4 text-right">
+                                        <span id="txDeltaBadge" class="inline-block px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-600">
+                                            +0% Capacity
+                                        </span>
+                                    </td>
+                                </tr>
+
+                                <!-- Queue Time -->
+                                <tr>
+                                    <td class="py-3 px-4 font-medium text-slate-900">
+                                        Average Queue Time
+                                        <span class="block text-xs text-slate-500 font-normal">Customer wait time (minutes)</span>
+                                    </td>
+                                    <td class="py-3 px-4">
+                                        <input type="number" id="currQueue" name="currQueue" min="0" step="0.5" placeholder="12" oninput="calculateMetrics()" class="w-full max-w-[130px] px-3 py-1.5 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-sky-500 focus:outline-none">
+                                    </td>
+                                    <td class="py-3 px-4">
+                                        <input type="number" id="projQueue" name="projQueue" min="0" step="0.5" placeholder="4" oninput="calculateMetrics()" class="w-full max-w-[130px] px-3 py-1.5 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-sky-500 focus:outline-none">
+                                    </td>
+                                    <td class="py-3 px-4 text-right">
+                                        <span id="queueDeltaBadge" class="inline-block px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-600">
+                                            0 mins reduction
+                                        </span>
+                                    </td>
+                                </tr>
+
+                                <!-- Monthly Store Revenue -->
+                                <tr>
+                                    <td class="py-3 px-4 font-medium text-slate-900">
+                                        Monthly Store Revenue
+                                        <span class="block text-xs text-slate-500 font-normal">Total monthly store sales</span>
+                                    </td>
+                                    <td class="py-3 px-4">
+                                        <div class="relative">
+                                            <input type="number" id="currRev" name="currRev" min="0" placeholder="150000" oninput="calculateMetrics()" class="w-full max-w-[140px] px-3 py-1.5 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-sky-500 focus:outline-none">
+                                        </div>
+                                    </td>
+                                    <td class="py-3 px-4">
+                                        <div class="relative">
+                                            <input type="number" id="projRevInc" name="projRevInc" min="0" placeholder="25000" oninput="calculateMetrics()" class="w-full max-w-[140px] px-3 py-1.5 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-sky-500 focus:outline-none">
+                                        </div>
+                                    </td>
+                                    <td class="py-3 px-4 text-right">
+                                        <span id="revDeltaBadge" class="inline-block px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                            +0% Rev Uplift
+                                        </span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Alternative Solutions Textarea -->
+                    <div>
+                        <label for="alternativeSolutions" class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">
+                            Alternative Solutions Evaluated <span class="text-rose-500">*</span>
+                        </label>
+                        <p class="text-xs text-slate-500 mb-2">Why can't existing staff scheduling, queue reallocation, or handheld line-busting resolve this issue?</p>
+                        <textarea id="alternativeSolutions" name="alternativeSolutions" rows="3" required placeholder="Detail evaluated alternatives (e.g. Handheld mobile POS attempted during lunch peaks, but restricted by payment terminal connectivity and receipt printing limitations...)" class="w-full p-3 bg-slate-50 border border-slate-300 rounded-lg text-slate-800 text-sm focus:ring-2 focus:ring-sky-500 focus:bg-white focus:outline-none transition"></textarea>
+                    </div>
+                </section>
+
+                <!-- SECTION 4: SITE READINESS & ASSET PREFERENCE -->
+                <section class="space-y-4">
+                    <div class="flex items-center gap-3 border-b border-slate-200 pb-2">
+                        <span class="flex items-center justify-center w-7 h-7 rounded-full bg-sky-100 text-sky-700 font-bold text-sm">4</span>
+                        <div>
+                            <h3 class="text-lg font-bold text-slate-900 tracking-tight">Site Readiness & Asset Preference</h3>
+                            <p class="text-xs text-slate-500">Ensure store physical prerequisites are met prior to request dispatch</p>
+                        </div>
+                    </div>
+
+                    <!-- Infrastructure Checklist -->
+                    <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 sm:p-5">
+                        <div class="flex items-center justify-between mb-3">
+                            <h4 class="text-xs font-bold uppercase tracking-wider text-slate-700">Store Infrastructure Checklist</h4>
+                            <span id="infraStatusBadge" class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-100 text-amber-800 border border-amber-200">
+                                Checklist Pending (0/3)
+                            </span>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <!-- Toggle 1 -->
+                            <label class="flex items-center p-3 bg-white rounded-lg border border-slate-200 hover:border-slate-300 cursor-pointer transition shadow-sm">
+                                <input type="checkbox" id="infraCounter" name="infraCounter" onchange="updateInfraStatus()" class="w-4 h-4 text-sky-600 rounded border-slate-300 focus:ring-sky-500">
+                                <div class="ml-3">
+                                    <span class="text-xs font-semibold text-slate-800 block">Counter Space Ready</span>
+                                    <span class="text-[11px] text-slate-500">Cleared & physically sized</span>
+                                </div>
+                            </label>
+
+                            <!-- Toggle 2 -->
+                            <label class="flex items-center p-3 bg-white rounded-lg border border-slate-200 hover:border-slate-300 cursor-pointer transition shadow-sm">
+                                <input type="checkbox" id="infraPower" name="infraPower" onchange="updateInfraStatus()" class="w-4 h-4 text-sky-600 rounded border-slate-300 focus:ring-sky-500">
+                                <div class="ml-3">
+                                    <span class="text-xs font-semibold text-slate-800 block">Dedicated AC Outlet</span>
+                                    <span class="text-[11px] text-slate-500">UPS / Clean surge line</span>
+                                </div>
+                            </label>
+
+                            <!-- Toggle 3 -->
+                            <label class="flex items-center p-3 bg-white rounded-lg border border-slate-200 hover:border-slate-300 cursor-pointer transition shadow-sm">
+                                <input type="checkbox" id="infraLan" name="infraLan" onchange="updateInfraStatus()" class="w-4 h-4 text-sky-600 rounded border-slate-300 focus:ring-sky-500">
+                                <div class="ml-3">
+                                    <span class="text-xs font-semibold text-slate-800 block">Active Network LAN</span>
+                                    <span class="text-[11px] text-slate-500">Verified RJ45 ethernet drop</span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Asset Preference Selection -->
+                    <div>
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-2">
+                            Asset Type Requested <span class="text-rose-500">*</span>
+                        </label>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <!-- Option 1: Refurbished -->
+                            <div class="border rounded-xl p-4 transition hover:border-sky-300 bg-white cursor-pointer" onclick="selectAssetType('asset_refurbished')">
+                                <div class="flex items-start gap-3">
+                                    <input type="radio" id="asset_refurbished" name="assetType" value="Refurbished / Good Stock Unit" required onchange="updateLeadTimeNote()" class="mt-1 text-sky-600 focus:ring-sky-500">
+                                    <div>
+                                        <div class="flex items-center gap-2">
+                                            <label for="asset_refurbished" class="font-bold text-slate-900 text-sm cursor-pointer">Refurbished / Good Stock Unit</label>
+                                            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">Fast Deployment</span>
+                                        </div>
+                                        <p class="text-xs text-slate-500 mt-1">Faster allocation from central buffer pool (approx 7–14 days setup lead time).</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Option 2: New Procurement -->
+                            <div class="border rounded-xl p-4 transition hover:border-sky-300 bg-white cursor-pointer" onclick="selectAssetType('asset_new')">
+                                <div class="flex items-start gap-3">
+                                    <input type="radio" id="asset_new" name="assetType" value="New Unit Procurement" onchange="updateLeadTimeNote()" class="mt-1 text-sky-600 focus:ring-sky-500">
+                                    <div>
+                                        <div class="flex items-center gap-2">
+                                            <label for="asset_new" class="font-bold text-slate-900 text-sm cursor-pointer">New Unit Procurement</label>
+                                            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-800">Standard Cycle</span>
+                                        </div>
+                                        <p class="text-xs text-slate-500 mt-1">Brand new hardware procurement. Subject to standard 60–90 day vendor procurement lead time.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SECTION 5: FINANCIAL & BUDGET ALLOCATION -->
+                <section class="space-y-4">
+                    <div class="flex items-center gap-3 border-b border-slate-200 pb-2">
+                        <span class="flex items-center justify-center w-7 h-7 rounded-full bg-sky-100 text-sky-700 font-bold text-sm">5</span>
+                        <div>
+                            <h3 class="text-lg font-bold text-slate-900 tracking-tight">Financial & Budget Allocation</h3>
+                            <p class="text-xs text-slate-500">Specify accounting source and capital estimation</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <!-- Budget Status -->
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-2">
+                                Budget Allocation Status <span class="text-rose-500">*</span>
+                            </label>
+                            <div class="space-y-2">
+                                <label class="flex items-center p-3 bg-slate-50 border border-slate-200 rounded-lg cursor-pointer hover:bg-white transition">
+                                    <input type="radio" id="budget_approved" name="budgetStatus" value="Budgeted" required onchange="toggleUnbudgetedNote()" class="text-sky-600 focus:ring-sky-500">
+                                    <span class="ml-2.5 text-xs font-semibold text-slate-800">Budgeted (Covered under annual store CAPEX)</span>
+                                </label>
+                                <label class="flex items-center p-3 bg-slate-50 border border-slate-200 rounded-lg cursor-pointer hover:bg-white transition">
+                                    <input type="radio" id="budget_unbudgeted" name="budgetStatus" value="Unbudgeted / Re-allocation" onchange="toggleUnbudgetedNote()" class="text-sky-600 focus:ring-sky-500">
+                                    <span class="ml-2.5 text-xs font-semibold text-slate-800">Unbudgeted / Re-allocation (Requires FAS emergency approval)</span>
+                                </label>
+                            </div>
+
+                            <!-- Emergency Attachment Toggle Note -->
+                            <div id="unbudgetedNotice" class="mt-3 p-3 bg-amber-50 border border-amber-200 rounded-lg hidden text-xs text-amber-900">
+                                <div class="flex items-center gap-2 font-semibold">
+                                    <i class="fa-solid fa-triangle-exclamation text-amber-600"></i>
+                                    <span>Emergency FAS Justification Required</span>
+                                </div>
+                                <p class="mt-1 text-slate-600 text-[11px]">Attach formal emergency memo signed by District Manager during approval phase.</p>
+                                <label class="mt-2 flex items-center gap-2 cursor-pointer">
+                                    <input type="checkbox" id="hasEmergencyAttachment" onchange="updateFormProgress()" class="rounded text-sky-600">
+                                    <span class="text-slate-700 font-medium text-[11px]">Justification memo prepared & attached</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Estimated Investment Cost -->
+                        <div>
+                            <label for="estimatedCost" class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-2">
+                                Estimated Hardware / Setup Investment
+                            </label>
+                            <div class="flex rounded-lg shadow-sm">
+                                <select id="costCurrency" name="costCurrency" class="px-3 py-2.5 bg-slate-100 border border-r-0 border-slate-300 rounded-l-lg text-xs font-bold text-slate-700 focus:outline-none">
+                                    <option value="PHP">₱ PHP</option>
+                                    <option value="USD">$ USD</option>
+                                </select>
+                                <input type="number" id="estimatedCost" name="estimatedCost" placeholder="75000" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-r-lg text-slate-800 text-sm font-mono focus:ring-2 focus:ring-sky-500 focus:bg-white focus:outline-none transition">
+                            </div>
+                            <span class="text-[11px] text-slate-500 mt-1 block">* Cost estimation filled out in coordination with IT / FAS Asset Management.</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SECTION 6: APPROVAL & GOVERNANCE GATE -->
+                <section class="space-y-4">
+                    <div class="flex items-center gap-3 border-b border-slate-200 pb-2">
+                        <span class="flex items-center justify-center w-7 h-7 rounded-full bg-sky-100 text-sky-700 font-bold text-sm">6</span>
+                        <div>
+                            <h3 class="text-lg font-bold text-slate-900 tracking-tight">Approval & Governance Gate</h3>
+                            <p class="text-xs text-slate-500">Sign-off flow for enterprise authorization and deployment trigger</p>
+                        </div>
+                    </div>
+
+                    <!-- Approval Table / Sign-off Interactive Cards -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        
+                        <!-- Role 1: Store Manager -->
+                        <div class="border border-slate-200 rounded-xl p-4 bg-slate-50/50 flex flex-col justify-between space-y-3">
+                            <div>
+                                <div class="flex items-center justify-between border-b border-slate-200 pb-2">
+                                    <span class="text-xs font-bold text-slate-900 uppercase">Store Manager</span>
+                                    <span class="text-[10px] font-semibold text-sky-700 bg-sky-100 px-2 py-0.5 rounded">Initiator</span>
+                                </div>
+                                <input type="text" id="app_sm_name" placeholder="Signer Name" class="mt-2 text-xs font-medium w-full p-1.5 border border-slate-300 rounded bg-white">
+                            </div>
+                            <div>
+                                <label class="flex items-center gap-2 cursor-pointer mb-2">
+                                    <input type="checkbox" id="app_sm_check" onchange="updateSignoff('sm')" class="rounded text-sky-600">
+                                    <span class="text-xs text-slate-700 font-semibold">Submitted Request</span>
+                                </label>
+                                <input type="date" id="app_sm_date" class="w-full text-xs p-1 border border-slate-300 rounded bg-white text-slate-600">
+                                <div id="stamp_sm" class="mt-2 text-center text-xs font-bold py-1 rounded bg-slate-200 text-slate-600 uppercase border">
+                                    Pending
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Role 2: Area Manager -->
+                        <div class="border border-slate-200 rounded-xl p-4 bg-slate-50/50 flex flex-col justify-between space-y-3">
+                            <div>
+                                <div class="flex items-center justify-between border-b border-slate-200 pb-2">
+                                    <span class="text-xs font-bold text-slate-900 uppercase">Area Manager</span>
+                                    <span class="text-[10px] font-semibold text-amber-700 bg-amber-100 px-2 py-0.5 rounded">Reviewer</span>
+                                </div>
+                                <input type="text" id="app_am_name" placeholder="Signer Name" class="mt-2 text-xs font-medium w-full p-1.5 border border-slate-300 rounded bg-white">
+                            </div>
+                            <div>
+                                <label class="flex items-center gap-2 cursor-pointer mb-2">
+                                    <input type="checkbox" id="app_am_check" onchange="updateSignoff('am')" class="rounded text-sky-600">
+                                    <span class="text-xs text-slate-700 font-semibold">Approved Justification</span>
+                                </label>
+                                <input type="date" id="app_am_date" class="w-full text-xs p-1 border border-slate-300 rounded bg-white text-slate-600">
+                                <div id="stamp_am" class="mt-2 text-center text-xs font-bold py-1 rounded bg-slate-200 text-slate-600 uppercase border">
+                                    Pending
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Role 3: IT Department -->
+                        <div class="border border-slate-200 rounded-xl p-4 bg-slate-50/50 flex flex-col justify-between space-y-3">
+                            <div>
+                                <div class="flex items-center justify-between border-b border-slate-200 pb-2">
+                                    <span class="text-xs font-bold text-slate-900 uppercase">IT Department</span>
+                                    <span class="text-[10px] font-semibold text-purple-700 bg-purple-100 px-2 py-0.5 rounded">Infra Ready</span>
+                                </div>
+                                <input type="text" id="app_it_name" placeholder="Signer Name" class="mt-2 text-xs font-medium w-full p-1.5 border border-slate-300 rounded bg-white">
+                            </div>
+                            <div>
+                                <label class="flex items-center gap-2 cursor-pointer mb-2">
+                                    <input type="checkbox" id="app_it_check" onchange="updateSignoff('it')" class="rounded text-sky-600">
+                                    <span class="text-xs text-slate-700 font-semibold">Technical Approval</span>
+                                </label>
+                                <input type="date" id="app_it_date" class="w-full text-xs p-1 border border-slate-300 rounded bg-white text-slate-600">
+                                <div id="stamp_it" class="mt-2 text-center text-xs font-bold py-1 rounded bg-slate-200 text-slate-600 uppercase border">
+                                    Pending
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Role 4: FAS / Finance -->
+                        <div class="border border-slate-200 rounded-xl p-4 bg-slate-50/50 flex flex-col justify-between space-y-3">
+                            <div>
+                                <div class="flex items-center justify-between border-b border-slate-200 pb-2">
+                                    <span class="text-xs font-bold text-slate-900 uppercase">FAS / Finance</span>
+                                    <span class="text-[10px] font-semibold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded">Asset / CAPEX</span>
+                                </div>
+                                <input type="text" id="app_fas_name" placeholder="Signer Name" class="mt-2 text-xs font-medium w-full p-1.5 border border-slate-300 rounded bg-white">
+                            </div>
+                            <div>
+                                <label class="flex items-center gap-2 cursor-pointer mb-2">
+                                    <input type="checkbox" id="app_fas_check" onchange="updateSignoff('fas')" class="rounded text-sky-600">
+                                    <span class="text-xs text-slate-700 font-semibold">CAPEX / Asset Allocated</span>
+                                </label>
+                                <input type="date" id="app_fas_date" class="w-full text-xs p-1 border border-slate-300 rounded bg-white text-slate-600">
+                                <div id="stamp_fas" class="mt-2 text-center text-xs font-bold py-1 rounded bg-slate-200 text-slate-600 uppercase border">
+                                    Pending
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+
+                <!-- Bottom Action & Status Banner -->
+                <div class="no-print pt-4 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <div class="text-xs text-slate-500">
+                        <i class="fa-solid fa-circle-info text-sky-600 mr-1"></i> Ensure all required fields are filled before submitting or printing.
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <button type="button" onclick="resetForm()" class="px-4 py-2 text-xs font-medium text-slate-600 hover:text-slate-900 transition">
+                            Clear Form
+                        </button>
+                        <button type="submit" id="submitBtn" class="px-6 py-2.5 bg-sky-600 hover:bg-sky-500 text-white font-semibold text-sm rounded-lg shadow-md transition flex items-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed">
+                            <i class="fa-solid fa-paper-plane"></i>
+                            <span>Submit Request</span>
+                        </button>
+                        <button type="button" id="generateBtn" onclick="handleGenerate()" disabled class="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-sm rounded-lg shadow-md transition flex items-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-emerald-600">
+                            <i class="fa-solid fa-file-export"></i>
+                            <span>Generate (Doc + PDF)</span>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </form>
+    </main>
+
+    <!-- Custom Modal Dialog for Messages -->
+    <div id="modalBackdrop" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden opacity-0 transition-opacity duration-200">
+        <div class="bg-white rounded-xl max-w-md w-full mx-4 shadow-2xl border border-slate-200 overflow-hidden transform scale-95 transition-transform duration-200" id="modalBox">
+            <div id="modalHeader" class="p-4 bg-sky-600 text-white flex justify-between items-center">
+                <h3 id="modalTitle" class="font-bold text-base flex items-center gap-2">
+                    <i class="fa-solid fa-circle-check"></i> Form Notification
+                </h3>
+                <button type="button" onclick="closeModal()" class="text-white/80 hover:text-white">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="p-5">
+                <p id="modalMessage" class="text-sm text-slate-700 leading-relaxed"></p>
+                <div class="mt-5 flex justify-end">
+                    <button type="button" onclick="closeModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white font-medium text-xs rounded-lg transition">
+                        Acknowledge
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ---- Backend wiring ----
+        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwJD1EMd6-kDe4pvfTTeusEbNJEHLH_fq4xdHWvJQ9aTDwigXlhKW_O9ydoGJEOqBgc/exec';
+        let currentRecordId = null; // set after a successful Submit; used later by Generate
+
+        // Calculate Lead Time between dates
+        function calculateLeadTime() {
+            const reqDateVal = document.getElementById('requestDate').value;
+            const targetDateVal = document.getElementById('targetGoLiveDate').value;
+            const daysSpan = document.getElementById('calculatedDays');
+            const statusTag = document.getElementById('leadTimeStatusTag');
+            const hiddenDays = document.getElementById('leadTimeDaysValue');
+
+            if (reqDateVal && targetDateVal) {
+                const reqDate = new Date(reqDateVal);
+                const targetDate = new Date(targetDateVal);
+                const diffTime = targetDate - reqDate;
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+                if (diffDays <= 0) {
+                    daysSpan.innerText = "Invalid date sequence";
+                    statusTag.className = "px-2 py-0.5 rounded font-semibold text-[11px] bg-rose-100 text-rose-800";
+                    statusTag.innerText = "Error";
+                    hiddenDays.value = "";
+                } else {
+                    daysSpan.innerText = `${diffDays} Days`;
+                    hiddenDays.value = diffDays;
+                    if (diffDays < 60) {
+                        statusTag.className = "px-2 py-0.5 rounded font-semibold text-[11px] bg-amber-100 text-amber-800";
+                        statusTag.innerText = "Expedited / Emergency Stock Buffer";
+                    } else if (diffDays <= 90) {
+                        statusTag.className = "px-2 py-0.5 rounded font-semibold text-[11px] bg-emerald-100 text-emerald-800";
+                        statusTag.innerText = "Standard Lead Time";
+                    } else {
+                        statusTag.className = "px-2 py-0.5 rounded font-semibold text-[11px] bg-blue-100 text-blue-800";
+                        statusTag.innerText = "Extended Lead Time";
+                    }
+                }
+            } else {
+                daysSpan.innerText = "-- days";
+                statusTag.className = "px-2 py-0.5 rounded font-semibold text-[11px] bg-slate-200 text-slate-700";
+                statusTag.innerText = "Select dates";
+                hiddenDays.value = "";
+            }
+            updateFormProgress();
+        }
+
+        // Helper to trigger driver selection radio
+        function selectPrimaryDriver(radioId) {
+            const radio = document.getElementById(radioId);
+            if (radio) {
+                radio.checked = true;
+                toggleDriverFields();
+            }
+        }
+
+        // Dynamic conditional visibility for primary drivers
+        function toggleDriverFields() {
+            document.getElementById('driver_sales_field').classList.add('hidden');
+            document.getElementById('driver_queue_field').classList.add('hidden');
+            document.getElementById('driver_seasonal_field').classList.add('hidden');
+
+            const selected = document.querySelector('input[name="primaryDriver"]:checked');
+            if (selected) {
+                if (selected.value === 'Sales Volume Growth') {
+                    document.getElementById('driver_sales_field').classList.remove('hidden');
+                } else if (selected.value === 'Customer Queue Mitigation') {
+                    document.getElementById('driver_queue_field').classList.remove('hidden');
+                } else if (selected.value === 'Seasonal / Promo Peak') {
+                    document.getElementById('driver_seasonal_field').classList.remove('hidden');
+                }
+            }
+            updateFormProgress();
+        }
+
+        // Calculate dynamic ROI and Impact Metrics badges
+        function calculateMetrics() {
+            const currTx = parseFloat(document.getElementById('currTx').value) || 0;
+            const projTx = parseFloat(document.getElementById('projTx').value) || 0;
+            const currQueue = parseFloat(document.getElementById('currQueue').value) || 0;
+            const projQueue = parseFloat(document.getElementById('projQueue').value) || 0;
+            const currRev = parseFloat(document.getElementById('currRev').value) || 0;
+            const projRevInc = parseFloat(document.getElementById('projRevInc').value) || 0;
+
+            // 1. Transaction Badge
+            const txBadge = document.getElementById('txDeltaBadge');
+            if (currTx > 0 && projTx > currTx) {
+                const txUplift = Math.round(((projTx - currTx) / currTx) * 100);
+                txBadge.innerText = `+${txUplift}% Capacity`;
+                txBadge.className = "inline-block px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 border border-emerald-200";
+            } else {
+                txBadge.innerText = `+0% Capacity`;
+                txBadge.className = "inline-block px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-600";
+            }
+
+            // 2. Queue Reduction Badge
+            const queueBadge = document.getElementById('queueDeltaBadge');
+            if (currQueue > 0 && projQueue < currQueue) {
+                const queueSaved = (currQueue - projQueue).toFixed(1);
+                queueBadge.innerText = `-${queueSaved} mins wait`;
+                queueBadge.className = "inline-block px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 border border-emerald-200";
+            } else {
+                queueBadge.innerText = `0 mins reduction`;
+                queueBadge.className = "inline-block px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-600";
+            }
+
+            // 3. Monthly Revenue Uplift %
+            const revBadge = document.getElementById('revDeltaBadge');
+            if (currRev > 0 && projRevInc > 0) {
+                const revUplift = ((projRevInc / currRev) * 100).toFixed(1);
+                revBadge.innerText = `+${revUplift}% Rev Uplift`;
+                revBadge.className = "inline-block px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 border border-emerald-200";
+            } else {
+                revBadge.innerText = `+0% Rev Uplift`;
+                revBadge.className = "inline-block px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-600";
+            }
+
+            updateFormProgress();
+        }
+
+        // Infrastructure Status Toggle
+        function updateInfraStatus() {
+            const counter = document.getElementById('infraCounter').checked;
+            const power = document.getElementById('infraPower').checked;
+            const lan = document.getElementById('infraLan').checked;
+            const badge = document.getElementById('infraStatusBadge');
+
+            const count = (counter ? 1 : 0) + (power ? 1 : 0) + (lan ? 1 : 0);
+
+            if (count === 3) {
+                badge.innerText = "Site Fully Ready (3/3)";
+                badge.className = "px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-300";
+            } else if (count > 0) {
+                badge.innerText = `Partially Ready (${count}/3)`;
+                badge.className = "px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-100 text-amber-800 border border-amber-300";
+            } else {
+                badge.innerText = "Checklist Pending (0/3)";
+                badge.className = "px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-600 border border-slate-200";
+            }
+            updateFormProgress();
+        }
+
+        // Helper for Asset Selection
+        function selectAssetType(assetId) {
+            const radio = document.getElementById(assetId);
+            if (radio) {
+                radio.checked = true;
+                updateLeadTimeNote();
+            }
+        }
+
+        function updateLeadTimeNote() {
+            const badge = document.getElementById('leadTimeBadge');
+            const selectedAsset = document.querySelector('input[name="assetType"]:checked');
+            if (selectedAsset && selectedAsset.value.includes('Refurbished')) {
+                badge.innerHTML = `<i class="fa-solid fa-bolt text-amber-300"></i> <span>Lead Time: Fast Deployment (Buffer Pool)</span>`;
+                badge.className = "inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium bg-emerald-500/20 text-emerald-300 border border-emerald-500/30";
+            } else {
+                badge.innerHTML = `<i class="fa-solid fa-clock"></i> <span>Lead Time: Standard 60–90 Days</span>`;
+                badge.className = "inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium bg-amber-500/20 text-amber-300 border border-amber-500/30";
+            }
+            updateFormProgress();
+        }
+
+        // Unbudgeted Emergency Toggle
+        function toggleUnbudgetedNote() {
+            const unbudgetedRadio = document.getElementById('budget_unbudgeted');
+            const notice = document.getElementById('unbudgetedNotice');
+            if (unbudgetedRadio && unbudgetedRadio.checked) {
+                notice.classList.remove('hidden');
+            } else {
+                notice.classList.add('hidden');
+            }
+            updateFormProgress();
+        }
+
+        // Dynamic Approval Stamps & Signatures
+        function updateSignoff(role) {
+            const check = document.getElementById(`app_${role}_check`);
+            const dateInput = document.getElementById(`app_${role}_date`);
+            const stamp = document.getElementById(`stamp_${role}`);
+
+            if (check.checked) {
+                if (!dateInput.value) {
+                    const today = new Date().toISOString().split('T')[0];
+                    dateInput.value = today;
+                }
+                stamp.innerText = "APPROVED";
+                stamp.className = "mt-2 text-center text-xs font-extrabold py-1 rounded bg-emerald-100 text-emerald-800 uppercase border border-emerald-300 shadow-sm tracking-wider";
+            } else {
+                stamp.innerText = "PENDING";
+                stamp.className = "mt-2 text-center text-xs font-bold py-1 rounded bg-slate-200 text-slate-600 uppercase border border-slate-300 tracking-wider";
+            }
+            updateFormProgress();
+        }
+
+        // Calculate total form completion progress bar
+        function updateFormProgress() {
+            const requiredIds = ['storeInfo', 'storeManager', 'areaManager', 'requestDate', 'targetGoLiveDate', 'alternativeSolutions'];
+            let filledCount = 0;
+
+            requiredIds.forEach(id => {
+                const el = document.getElementById(id);
+                if (el && el.value.trim() !== '') filledCount++;
+            });
+
+            if (document.querySelector('input[name="primaryDriver"]:checked')) filledCount++;
+            if (document.querySelector('input[name="assetType"]:checked')) filledCount++;
+            if (document.querySelector('input[name="budgetStatus"]:checked')) filledCount++;
+
+            const totalKeySteps = requiredIds.length + 3;
+            const percentage = Math.min(100, Math.round((filledCount / totalKeySteps) * 100));
+
+            const progressBar = document.getElementById('formProgressBar');
+            if (progressBar) {
+                progressBar.style.width = `${percentage}%`;
+            }
+        }
+
+        // Load Sample Data into Form for Quick Testing
+        function loadSampleData() {
+            document.getElementById('storeInfo').value = 'SM Megamall - Store #104';
+            document.getElementById('storeManager').value = 'Elena Cruz';
+            document.getElementById('areaManager').value = 'Marcus Vance';
+
+            const today = new Date();
+            const goLive = new Date();
+            goLive.setDate(today.getDate() + 75);
+
+            document.getElementById('requestDate').value = today.toISOString().split('T')[0];
+            document.getElementById('targetGoLiveDate').value = goLive.toISOString().split('T')[0];
+            calculateLeadTime();
+
+            // Primary Driver
+            document.getElementById('driver_queue').checked = true;
+            toggleDriverFields();
+            document.getElementById('currentWaitTime').value = 14;
+            document.getElementById('targetWaitStandard').value = 5;
+
+            // Metrics
+            document.getElementById('currTx').value = 52;
+            document.getElementById('projTx').value = 85;
+            document.getElementById('currQueue').value = 14;
+            document.getElementById('projQueue').value = 4.5;
+            document.getElementById('currRev').value = 320000;
+            document.getElementById('projRevInc').value = 55000;
+            calculateMetrics();
+
+            // Alternatives
+            document.getElementById('alternativeSolutions').value = 'Evaluated handheld line-busting mobile tablets during lunchtime peak (11:30 AM - 2:00 PM). However, processing non-cash payment cards and printing immediate fiscal receipts requires a full dedicated POS terminal counter.';
+
+            // Infrastructure
+            document.getElementById('infraCounter').checked = true;
+            document.getElementById('infraPower').checked = true;
+            document.getElementById('infraLan').checked = true;
+            updateInfraStatus();
+
+            // Asset Type
+            document.getElementById('asset_refurbished').checked = true;
+            updateLeadTimeNote();
+
+            // Financial
+            document.getElementById('budget_approved').checked = true;
+            toggleUnbudgetedNote();
+            document.getElementById('estimatedCost').value = 68000;
+            document.getElementById('costCurrency').value = 'PHP';
+
+            // Signoffs
+            document.getElementById('app_sm_name').value = 'Elena Cruz';
+            document.getElementById('app_sm_check').checked = true;
+            updateSignoff('sm');
+
+            document.getElementById('app_am_name').value = 'Marcus Vance';
+            document.getElementById('app_am_check').checked = true;
+            updateSignoff('am');
+
+            showModal('Sample Data Loaded', 'The form has been populated with sample business case data for testing.');
+        }
+
+        // Reset Form Values
+        function resetForm() {
+            document.getElementById('posRequestForm').reset();
+            toggleDriverFields();
+            calculateMetrics();
+            updateInfraStatus();
+            updateLeadTimeNote();
+            toggleUnbudgetedNote();
+            
+            ['sm', 'am', 'it', 'fas'].forEach(role => updateSignoff(role));
+            calculateLeadTime();
+
+            // Reset backend submission state too
+            currentRecordId = null;
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> <span>Submit Request</span>';
+
+            const generateBtn = document.getElementById('generateBtn');
+            generateBtn.disabled = true;
+            generateBtn.innerHTML = '<i class="fa-solid fa-file-export"></i> <span>Generate (Doc + PDF)</span>';
+
+            showModal('Form Reset', 'All input fields have been restored to default blank state.');
+        }
+
+        // Collects all form values into the object shape the backend expects
+        function collectFormData() {
+            return {
+                storeInfo: document.getElementById('storeInfo').value,
+                storeManager: document.getElementById('storeManager').value,
+                areaManager: document.getElementById('areaManager').value,
+                requestDate: document.getElementById('requestDate').value,
+                targetGoLiveDate: document.getElementById('targetGoLiveDate').value,
+                leadTimeDays: document.getElementById('leadTimeDaysValue').value,
+
+                primaryDriver: document.querySelector('input[name="primaryDriver"]:checked')?.value || '',
+                growthPercentage: document.getElementById('growthPercentage').value,
+                currentWaitTime: document.getElementById('currentWaitTime').value,
+                targetWaitStandard: document.getElementById('targetWaitStandard').value,
+                seasonalDetails: document.getElementById('seasonalDetails').value,
+
+                currTx: document.getElementById('currTx').value,
+                projTx: document.getElementById('projTx').value,
+                currQueue: document.getElementById('currQueue').value,
+                projQueue: document.getElementById('projQueue').value,
+                currRev: document.getElementById('currRev').value,
+                projRevInc: document.getElementById('projRevInc').value,
+                alternativeSolutions: document.getElementById('alternativeSolutions').value,
+
+                infraCounter: document.getElementById('infraCounter').checked,
+                infraPower: document.getElementById('infraPower').checked,
+                infraLan: document.getElementById('infraLan').checked,
+
+                assetType: document.querySelector('input[name="assetType"]:checked')?.value || '',
+
+                budgetStatus: document.querySelector('input[name="budgetStatus"]:checked')?.value || '',
+                estimatedCost: document.getElementById('estimatedCost').value,
+                costCurrency: document.getElementById('costCurrency').value,
+                // FIX: this was rendered in print (Section 5 unbudgeted notice) but never
+                // captured before — it never reached the Sheet or the generated Doc/PDF.
+                hasEmergencyAttachment: document.getElementById('hasEmergencyAttachment').checked,
+
+                smName: document.getElementById('app_sm_name').value,
+                smCheck: document.getElementById('app_sm_check').checked,
+                smDate: document.getElementById('app_sm_date').value,
+
+                amName: document.getElementById('app_am_name').value,
+                amCheck: document.getElementById('app_am_check').checked,
+                amDate: document.getElementById('app_am_date').value,
+
+                itName: document.getElementById('app_it_name').value,
+                itCheck: document.getElementById('app_it_check').checked,
+                itDate: document.getElementById('app_it_date').value,
+
+                fasName: document.getElementById('app_fas_name').value,
+                fasCheck: document.getElementById('app_fas_check').checked,
+                fasDate: document.getElementById('app_fas_date').value
+            };
+        }
+
+        // Form Submit Handler — now actually posts to the Apps Script backend
+        async function handleFormSubmit(e) {
+            e.preventDefault();
+
+            const submitBtn = document.getElementById('submitBtn');
+            const originalBtnHtml = submitBtn.innerHTML;
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>Submitting...</span>';
+
+            const formData = collectFormData();
+
+            try {
+                const response = await fetch(APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' }, // avoids CORS preflight against Apps Script
+                    body: JSON.stringify({ action: 'submit', data: formData })
+                });
+
+                const result = await response.json();
+
+                if (result.ok) {
+                    currentRecordId = result.id;
+                    submitBtn.innerHTML = '<i class="fa-solid fa-check"></i> <span>Submitted</span>';
+
+                    const generateBtn = document.getElementById('generateBtn');
+                    generateBtn.disabled = false;
+
+                    showModal(
+                        'Business Case Submitted!',
+                        `Request for <strong>${formData.storeInfo || 'this store'}</strong> was saved to the database.<br>Reference ID: <strong>${result.id}</strong><br><br>You can now click <strong>Generate</strong> to create the Doc + PDF.`
+                    );
+                } else {
+                    throw new Error(result.error || 'Unknown error from server');
+                }
+            } catch (err) {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnHtml;
+                showModal('Submission Failed', `Something went wrong while saving this request: ${err.message}. Please try again.`);
+            }
+        }
+
+        // Generate Doc + PDF for the just-submitted record
+        async function handleGenerate() {
+            if (!currentRecordId) {
+                showModal('No Record Yet', 'Please submit the request first before generating documents.');
+                return;
+            }
+
+            const generateBtn = document.getElementById('generateBtn');
+            const originalBtnHtml = generateBtn.innerHTML;
+            generateBtn.disabled = true;
+            generateBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>Generating...</span>';
+
+            try {
+                const response = await fetch(APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify({ action: 'generate', id: currentRecordId })
+                });
+
+                const result = await response.json();
+
+                if (result.ok) {
+                    generateBtn.innerHTML = '<i class="fa-solid fa-check"></i> <span>Generated</span>';
+                    showModal(
+                        'Documents Generated!',
+                        `Doc + PDF created in Google Drive for reference <strong>${currentRecordId}</strong>.<br><br>
+                         <a href="${result.docLink}" target="_blank" class="text-sky-600 underline font-semibold">Open Google Doc</a><br>
+                         <a href="${result.pdfLink}" target="_blank" class="text-sky-600 underline font-semibold">Open PDF</a>`
+                    );
+                    // Re-enable shortly after, in case they want to regenerate this same record again
+                    setTimeout(() => {
+                        generateBtn.disabled = false;
+                        generateBtn.innerHTML = '<i class="fa-solid fa-file-export"></i> <span>Regenerate (Doc + PDF)</span>';
+                    }, 1500);
+                } else {
+                    throw new Error(result.error || 'Unknown error from server');
+                }
+            } catch (err) {
+                generateBtn.disabled = false;
+                generateBtn.innerHTML = originalBtnHtml;
+                showModal('Generation Failed', `Something went wrong while generating the documents: ${err.message}. Please try again.`);
+            }
+        }
+
+        // Modal Helpers
+        function showModal(title, msg) {
+            document.getElementById('modalTitle').innerHTML = `<i class="fa-solid fa-circle-check text-white"></i> ${title}`;
+            document.getElementById('modalMessage').innerHTML = msg;
+            
+            const backdrop = document.getElementById('modalBackdrop');
+            const box = document.getElementById('modalBox');
+            
+            backdrop.classList.remove('hidden');
+            setTimeout(() => {
+                backdrop.classList.remove('opacity-0');
+                box.classList.remove('scale-95');
+                box.classList.add('scale-100');
+            }, 10);
+        }
+
+        function closeModal() {
+            const backdrop = document.getElementById('modalBackdrop');
+            const box = document.getElementById('modalBox');
+            
+            backdrop.classList.add('opacity-0');
+            box.classList.remove('scale-100');
+            box.classList.add('scale-95');
+            
+            setTimeout(() => {
+                backdrop.classList.add('hidden');
+            }, 200);
+        }
+
+        // Initialize listeners on load
+        window.onload = function() {
+            updateFormProgress();
+        };
+    </script>
+</body>
+</html>
