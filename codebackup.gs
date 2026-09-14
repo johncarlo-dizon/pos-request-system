@@ -44,6 +44,10 @@ function getSheet_() {
   return SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(SHEET_NAME);
 }
 
+function getHeaders_(sheet) {
+  return sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
+}
+
 function jsonOut_(obj) {
   return ContentService.createTextOutput(JSON.stringify(obj))
     .setMimeType(ContentService.MimeType.JSON);
@@ -82,8 +86,9 @@ function doPost(e) {
 
 function handleSubmit_(data) {
   const sheet = getSheet_();
+  const headers = getHeaders_(sheet);
   const id = generateId_();
-  const row = COLUMNS.map(col => {
+  const row = headers.map(col => {
     if (col === 'id') return id;
     if (col === 'timestamp') return new Date();
     if (col === 'status') return 'Submitted';
@@ -104,11 +109,12 @@ function findRowIndexById_(sheet, id) {
 
 function handleUpdate_(id, data) {
   const sheet = getSheet_();
+  const headers = getHeaders_(sheet);
   const rowIndex = findRowIndexById_(sheet, id);
   if (rowIndex === -1) return jsonOut_({ ok: false, error: 'Record not found: ' + id });
 
   Object.keys(data).forEach(key => {
-    const colIndex = COLUMNS.indexOf(key);
+    const colIndex = headers.indexOf(key);
     if (colIndex !== -1) {
       sheet.getRange(rowIndex, colIndex + 1).setValue(data[key]);
     }
@@ -121,7 +127,7 @@ function handleGenerate_(id) {
   const rowIndex = findRowIndexById_(sheet, id);
   if (rowIndex === -1) return jsonOut_({ ok: false, error: 'Record not found: ' + id });
 
-  const headers = COLUMNS;
+  const headers = getHeaders_(sheet);
   const rowValues = sheet.getRange(rowIndex, 1, 1, headers.length).getValues()[0];
   const record = {};
   headers.forEach((h, i) => record[h] = rowValues[i]);
@@ -298,8 +304,10 @@ function handleGenerate_(id) {
   doc.saveAndClose();
 
   const docFile = DriveApp.getFileById(doc.getId());
-  folder.addFile(docFile);
-  DriveApp.getRootFolder().removeFile(docFile); // move out of default My Drive root
+  // Move the generated document with the supported single-step API. The old
+  // addFile/removeFile pair can fail with "Invalid argument" for some Drive
+  // folder types and leaves the document in an inconsistent location.
+  docFile.moveTo(folder);
 
   // Export PDF version into the same folder
   const pdfBlob = docFile.getAs('application/pdf').setName(docName + '.pdf');
@@ -308,15 +316,20 @@ function handleGenerate_(id) {
   // Print now opens this file directly instead of using the browser's print
   // dialog, so anyone with the link — including approvers without Drive
   // access to DRIVE_FOLDER_ID — needs to be able to view it.
-  pdfFile.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+  try {
+    pdfFile.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+  } catch (sharingError) {
+    // Domain sharing policies may forbid public links; the file is still
+    // generated and remains available to users with Drive access.
+  }
 
   const docLink = docFile.getUrl();
   const pdfLink = pdfFile.getUrl();
 
   // Write links + status back into the same row
-  const docLinkCol = COLUMNS.indexOf('docLink') + 1;
-  const pdfLinkCol = COLUMNS.indexOf('pdfLink') + 1;
-  const statusCol  = COLUMNS.indexOf('status') + 1;
+  const docLinkCol = headers.indexOf('docLink') + 1;
+  const pdfLinkCol = headers.indexOf('pdfLink') + 1;
+  const statusCol  = headers.indexOf('status') + 1;
   sheet.getRange(rowIndex, docLinkCol).setValue(docLink);
   sheet.getRange(rowIndex, pdfLinkCol).setValue(pdfLink);
   sheet.getRange(rowIndex, statusCol).setValue('Generated');
@@ -413,7 +426,7 @@ function addKeyValueTable_(body, rows) {
     labelCell.setBackgroundColor('#f1f5f9');
     labelCell.setWidth(180);
     labelCell.editAsText().setBold(true).setFontSize(9).setForegroundColor('#334155');
-    valueCell.editAsText().setFontSize(9.5).setForegroundColor('#0f172a');
+    valueCell.editAsText().setFontSize(10).setForegroundColor('#0f172a');
   }
 }
 

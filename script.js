@@ -1,5 +1,5 @@
 // ---- Backend wiring ----
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwJD1EMd6-kDe4pvfTTeusEbNJEHLH_fq4xdHWvJQ9aTDwigXlhKW_O9ydoGJEOqBgc/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxqQBm5vCMzMBLV-2FTU0tm5DPxeWATCnXVG8iVDOmGbmMu4sKGKkbMPnqZ4U9RgDT4/exec';
 let currentRecordId = null; // set after a successful Submit; used later by Generate
 
 // Calculate Lead Time between dates
