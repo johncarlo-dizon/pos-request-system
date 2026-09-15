@@ -1,0 +1,390 @@
+/* BC-POS Management Dashboard — styles
+   Palette matches the request form (slate/sky) so both tools feel like
+   one system, while the modal's section styling mirrors the generated
+   Doc/PDF (dark-blue headings, shaded label cells, bordered tables). */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #f1f5f9;
+    color: #1e293b;
+}
+
+/* ---- Header ---- */
+.dash-header {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: #0f172a;
+    color: #fff;
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    border-bottom: 1px solid #1e293b;
+}
+
+.dash-header .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.dash-header .brand-icon {
+    background: #0284c7;
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 14px;
+}
+
+.dash-header h1 {
+    font-size: 15px;
+    margin: 0;
+    font-weight: 700;
+}
+
+.dash-header p {
+    margin: 0;
+    font-size: 11px;
+    color: #94a3b8;
+}
+
+.dash-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn {
+    font-size: 12px;
+    font-weight: 600;
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: background 0.15s ease, opacity 0.15s ease;
+}
+
+.btn-primary {
+    background: #0284c7;
+    color: #fff;
+}
+.btn-primary:hover { background: #0369a1; }
+
+.btn-ghost {
+    background: #1e293b;
+    color: #e2e8f0;
+    border-color: #334155;
+}
+.btn-ghost:hover { background: #334155; }
+
+.search-input {
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid #334155;
+    background: #1e293b;
+    color: #e2e8f0;
+    font-size: 12px;
+    min-width: 220px;
+}
+.search-input::placeholder { color: #64748b; }
+
+/* ---- Main content ---- */
+.dash-main {
+    max-width: 1200px;
+    margin: 24px auto;
+    padding: 0 20px 60px;
+}
+
+.dash-summary {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 18px;
+    flex-wrap: wrap;
+}
+
+.summary-card {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 12px 16px;
+    min-width: 140px;
+}
+
+.summary-card .num {
+    font-size: 20px;
+    font-weight: 800;
+    color: #0f172a;
+}
+
+.summary-card .label {
+    font-size: 11px;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+/* ---- Table ---- */
+.table-wrap {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+table.records-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+table.records-table thead th {
+    background: #f8fafc;
+    text-align: left;
+    padding: 10px 14px;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #64748b;
+    border-bottom: 1px solid #e2e8f0;
+    white-space: nowrap;
+}
+
+table.records-table tbody td {
+    padding: 12px 14px;
+    border-bottom: 1px solid #f1f5f9;
+    vertical-align: middle;
+}
+
+table.records-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+table.records-table tbody tr:hover {
+    background: #f8fafc;
+}
+
+.cell-id {
+    font-family: monospace;
+    font-size: 11.5px;
+    color: #0369a1;
+    font-weight: 600;
+}
+
+.cell-store .name {
+    font-weight: 600;
+    color: #0f172a;
+}
+.cell-store .sub {
+    font-size: 11px;
+    color: #64748b;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+.status-submitted { background: #dbeafe; color: #1e40af; }
+.status-generated { background: #d1fae5; color: #065f46; }
+.status-default   { background: #e2e8f0; color: #475569; }
+
+.file-links {
+    display: flex;
+    gap: 10px;
+}
+.file-links a {
+    font-size: 11px;
+    font-weight: 700;
+    text-decoration: none;
+    color: #0369a1;
+}
+.file-links a:hover { text-decoration: underline; }
+.file-links .disabled {
+    font-size: 11px;
+    color: #cbd5e1;
+    font-weight: 700;
+}
+
+.btn-view {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 6px 12px;
+    border-radius: 7px;
+    background: #0f172a;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+.btn-view:hover { background: #1e293b; }
+
+.empty-state, .loading-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: #94a3b8;
+    font-size: 13px;
+}
+
+/* ---- Modal ---- */
+.modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(2px);
+    display: none;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 40px 16px;
+    z-index: 50;
+    overflow-y: auto;
+}
+.modal-backdrop.open { display: flex; }
+
+.modal-box {
+    background: #fff;
+    border-radius: 14px;
+    max-width: 760px;
+    width: 100%;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    overflow: hidden;
+}
+
+.modal-header {
+    background: #0f172a;
+    color: #fff;
+    padding: 16px 22px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.modal-header .title {
+    font-size: 15px;
+    font-weight: 700;
+}
+.modal-header .subtitle {
+    font-size: 11px;
+    color: #94a3b8;
+    margin-top: 2px;
+}
+.modal-close {
+    background: none;
+    border: none;
+    color: #94a3b8;
+    font-size: 20px;
+    cursor: pointer;
+    line-height: 1;
+}
+.modal-close:hover { color: #fff; }
+
+.modal-body {
+    padding: 20px 22px;
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+.modal-links {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 18px;
+}
+.modal-links a {
+    font-size: 12px;
+    font-weight: 700;
+    padding: 7px 12px;
+    border-radius: 8px;
+    background: #f0f7ff;
+    color: #0369a1;
+    text-decoration: none;
+    border: 1px solid #e0effe;
+}
+.modal-links a:hover { background: #e0effe; }
+.modal-links .disabled {
+    font-size: 12px;
+    font-weight: 700;
+    padding: 7px 12px;
+    border-radius: 8px;
+    background: #f8fafc;
+    color: #cbd5e1;
+    border: 1px solid #f1f5f9;
+}
+
+.mv-section-heading {
+    font-size: 13px;
+    font-weight: 700;
+    color: #0c4a6e;
+    margin: 18px 0 2px;
+}
+.mv-section-heading:first-child { margin-top: 0; }
+
+.mv-section-sub {
+    font-size: 11px;
+    font-style: italic;
+    color: #64748b;
+    margin: 0 0 8px;
+}
+
+table.mv-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 4px;
+    font-size: 12px;
+}
+table.mv-table td {
+    border: 1px solid #e2e8f0;
+    padding: 7px 10px;
+    vertical-align: top;
+}
+table.mv-table td.mv-label {
+    background: #f1f5f9;
+    font-weight: 700;
+    color: #334155;
+    width: 34%;
+}
+table.mv-table td.mv-value {
+    color: #0f172a;
+}
+
+table.mv-approval {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11.5px;
+    margin-top: 4px;
+}
+table.mv-approval th, table.mv-approval td {
+    border: 1px solid #e2e8f0;
+    padding: 6px 8px;
+    text-align: left;
+}
+table.mv-approval th {
+    background: #f1f5f9;
+    font-weight: 700;
+    color: #334155;
+}
+.mv-approved { background: #d1fae5; color: #065f46; font-weight: 700; }
+.mv-pending  { background: #e2e8f0; color: #475569; font-weight: 700; }
+
+.mv-footnote {
+    font-size: 10.5px;
+    font-style: italic;
+    color: #94a3b8;
+    margin: 4px 0 4px;
+}

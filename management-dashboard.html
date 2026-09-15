@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POS Request Management Dashboard</title>
+    <link rel="stylesheet" href="management.css">
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="dash-header">
+        <div class="brand">
+            <div class="brand-icon">POS</div>
+            <div>
+                <h1>Management Dashboard</h1>
+                <p>Additional POS Unit Requests — read-only record viewer</p>
+            </div>
+        </div>
+        <div class="dash-actions">
+            <input type="text" id="searchInput" class="search-input" placeholder="Search store, manager, ID, status…">
+            <select id="statusFilter" class="search-input" style="min-width:140px;">
+                <option value="">All Statuses</option>
+                <option value="Submitted">Submitted</option>
+                <option value="Generated">Generated</option>
+            </select>
+            <button type="button" class="btn btn-primary" onclick="window.location.href='pos_request.html'">New POS Request</button>
+            <button id="refreshBtn" class="btn btn-ghost">Refresh</button>
+        </div>
+    </header>
+
+    <main class="dash-main">
+
+        <!-- Summary cards -->
+        <div class="dash-summary">
+            <div class="summary-card">
+                <div class="num" id="summaryTotal">—</div>
+                <div class="label">Total Requests</div>
+            </div>
+            <div class="summary-card">
+                <div class="num" id="summarySubmitted">—</div>
+                <div class="label">Awaiting Generation</div>
+            </div>
+            <div class="summary-card">
+                <div class="num" id="summaryGenerated">—</div>
+                <div class="label">Doc/PDF Generated</div>
+            </div>
+        </div>
+
+        <!-- Records table: 6 columns max, including file links and the View action -->
+        <div class="table-wrap">
+            <table class="records-table">
+                <thead>
+                    <tr>
+                        <th>Ref ID</th>
+                        <th>Store</th>
+                        <th>Status</th>
+                        <th>Date Submitted</th>
+                        <th>Files</th>
+                        <th>View</th>
+                    </tr>
+                </thead>
+                <tbody id="recordsBody">
+                    <tr><td colspan="6" class="loading-state">Loading records…</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+    </main>
+
+    <!-- View modal: shows every field for the selected record -->
+    <div id="modalBackdrop" class="modal-backdrop">
+        <div class="modal-box">
+            <div class="modal-header">
+                <div>
+                    <div class="title" id="modalTitle">Record</div>
+                    <div class="subtitle" id="modalSubtitle">Ref: —</div>
+                </div>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBody"></div>
+        </div>
+    </div>
+
+    <script src="management.js"></script>
+</body>
+</html>
