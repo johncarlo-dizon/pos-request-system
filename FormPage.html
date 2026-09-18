@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <meta charset="utf-8">
+  <?!= include('FormStyle'); ?>
+</head>
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <h1>POS Additional Unit Request</h1>
+      <a href="<?= baseUrl ?>?page=management">View Records →</a>
+    </div>
+
+    <div id="errorMsg" class="msg error"></div>
+
+    <form id="requestForm">
+
+      <!-- 1. REQUEST INFORMATION -->
+      <div class="card">
+        <h2>1. Request Information</h2>
+        <div class="grid">
+          <div class="field full">
+            <label for="storeCode">Store Code / Store Name<span class="req">*</span></label>
+            <input type="text" id="storeCode" placeholder="e.g. 3368 - ATP DC MEXICO" required>
+          </div>
+          <div class="field">
+            <label for="requestDate">Request Date<span class="req">*</span></label>
+            <input type="date" id="requestDate" required>
+          </div>
+          <div class="field">
+            <label for="targetGoLiveDate">Target Go-Live Date<span class="req">*</span></label>
+            <input type="date" id="targetGoLiveDate" required>
+          </div>
+          <div class="field full">
+            <label for="requestedBy">Requested By (Store Manager)<span class="req">*</span></label>
+            <input type="text" id="requestedBy" required>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. IMPACT & METRICS -->
+      <div class="card">
+        <h2>2. Impact &amp; Metrics</h2>
+
+        <div class="metric-row">
+          <div class="colhead">Current (Existing POS)</div>
+          <div class="colhead">Projected (With Additional POS)</div>
+
+          <div class="field">
+            <label for="peakHourTransactions">Peak Hour Hourly Transactions<span class="req">*</span></label>
+            <input type="number" id="peakHourTransactions" min="0" required>
+          </div>
+          <div class="field">
+            <label for="targetHourlyCapacity">Target Hourly Capacity<span class="req">*</span></label>
+            <input type="number" id="targetHourlyCapacity" min="0" required>
+          </div>
+
+          <div class="field">
+            <label for="avgQueueTime">Average Queue Time (mins)<span class="req">*</span></label>
+            <input type="number" id="avgQueueTime" min="0" required>
+          </div>
+          <div class="field">
+            <label for="expectedQueueTime">Expected Queue Time (mins)<span class="req">*</span></label>
+            <input type="number" id="expectedQueueTime" min="0" required>
+          </div>
+
+          <div class="field">
+            <label for="estMonthlyRevenue">Estimated Monthly Store Revenue<span class="req">*</span></label>
+            <input type="text" id="estMonthlyRevenue" placeholder="e.g. P1.2Million" required>
+          </div>
+          <div class="field">
+            <label for="projectedRevenueIncrease">Projected Monthly Revenue Increase<span class="req">*</span></label>
+            <input type="text" id="projectedRevenueIncrease" placeholder="e.g. P1.7Million" required>
+          </div>
+        </div>
+
+        <div class="field full" style="margin-top:10px;">
+          <label for="alternativeSolutions">Alternative Solutions Evaluated<span class="opt">(workaround for now)</span></label>
+          <textarea id="alternativeSolutions"></textarea>
+        </div>
+      </div>
+
+      <!-- 3. SITE READINESS -->
+      <div class="card">
+        <h2>3. Site Readiness &amp; Asset Preference</h2>
+        <div class="checkline">
+          <input type="checkbox" id="counterSpace">
+          <span>Counter space available &amp; clear?</span>
+        </div>
+        <div class="checkline">
+          <input type="checkbox" id="acPowerOutlet">
+          <span>Dedicated AC power outlet ready?</span>
+        </div>
+        <div class="checkline">
+          <input type="checkbox" id="lanPort">
+          <span>Active network LAN port ready?</span>
+        </div>
+      </div>
+
+      <!-- 4. FINANCIAL (hardcopy only, no inputs) -->
+      <div class="card">
+        <h2>4. Financial &amp; Budget Allocation</h2>
+        <div class="financial-note">
+          This section is completed on the printed hard copy after approval and is left blank on the generated document.
+        </div>
+      </div>
+
+      <!-- 5. APPROVAL & GOVERNANCE GATE -->
+      <div class="card">
+        <h2>5. Approval &amp; Governance Gate</h2>
+
+     
+        <div class="grid" style="margin-bottom:20px;">
+          <div class="field">
+            <label for="amName">Area Manager Name<span class="opt">(optional)</span></label>
+            <input type="text" id="amName">
+          </div>
+          <div class="field">
+            <label for="amDate">Area Manager Date<span class="opt">(optional)</span></label>
+            <input type="date" id="amDate">
+          </div>
+        </div>
+
+        <div class="approval-block" data-role="bm">
+          <h3>BM / DBM Manager</h3>
+          <div class="row">
+            <div class="field"><label for="bmName">Name<span class="opt">(optional)</span></label><input type="text" id="bmName" data-role-name="bm"></div>
+            <div class="field">
+              <label>Decision<span class="opt">(fill Name first)</span></label>
+              <div class="decision-choice">
+                <label><input type="radio" name="bmDecision" value="approved" data-role-field="bm" disabled> Approved</label>
+                <label><input type="radio" name="bmDecision" value="rejected" data-role-field="bm" disabled> Rejected</label>
+              </div>
+            </div>
+            <div class="field"><label for="bmDate">Date<span class="opt">(fill Name first)</span></label><input type="date" id="bmDate" data-role-field="bm" disabled></div>
+          </div>
+        </div>
+
+        <div class="approval-block" data-role="category">
+          <h3>Category</h3>
+          <div class="row">
+            <div class="field"><label for="categoryName">Name<span class="opt">(optional)</span></label><input type="text" id="categoryName" data-role-name="category"></div>
+            <div class="field">
+              <label>Decision<span class="opt">(fill Name first)</span></label>
+              <div class="decision-choice">
+                <label><input type="radio" name="categoryDecision" value="approved" data-role-field="category" disabled> Approved</label>
+                <label><input type="radio" name="categoryDecision" value="rejected" data-role-field="category" disabled> Rejected</label>
+              </div>
+            </div>
+            <div class="field"><label for="categoryDate">Date<span class="opt">(fill Name first)</span></label><input type="date" id="categoryDate" data-role-field="category" disabled></div>
+          </div>
+        </div>
+
+        <div class="approval-block" data-role="it">
+          <h3>IT</h3>
+          <div class="row">
+            <div class="field"><label for="itName">Name<span class="opt">(optional)</span></label><input type="text" id="itName" data-role-name="it"></div>
+            <div class="field">
+              <label>Decision<span class="opt">(fill Name first)</span></label>
+              <div class="decision-choice">
+                <label><input type="radio" name="itDecision" value="approved" data-role-field="it" disabled> Approved</label>
+                <label><input type="radio" name="itDecision" value="rejected" data-role-field="it" disabled> Rejected</label>
+              </div>
+            </div>
+            <div class="field"><label for="itDate">Date<span class="opt">(fill Name first)</span></label><input type="date" id="itDate" data-role-field="it" disabled></div>
+          </div>
+        </div>
+
+        <div class="approval-block" data-role="ba">
+          <h3>BA</h3>
+          <div class="row">
+            <div class="field"><label for="baName">Name<span class="opt">(optional)</span></label><input type="text" id="baName" data-role-name="ba"></div>
+            <div class="field">
+              <label>Decision<span class="opt">(fill Name first)</span></label>
+              <div class="decision-choice">
+                <label><input type="radio" name="baDecision" value="approved" data-role-field="ba" disabled> Approved</label>
+                <label><input type="radio" name="baDecision" value="rejected" data-role-field="ba" disabled> Rejected</label>
+              </div>
+            </div>
+            <div class="field"><label for="baDate">Date<span class="opt">(fill Name first)</span></label><input type="date" id="baDate" data-role-field="ba" disabled></div>
+          </div>
+        </div>
+
+        <div class="approval-block" data-role="fas">
+          <h3>FAS</h3>
+          <div class="row">
+            <div class="field"><label for="fasName">Name<span class="opt">(optional)</span></label><input type="text" id="fasName" data-role-name="fas"></div>
+            <div class="field">
+              <label>Decision<span class="opt">(fill Name first)</span></label>
+              <div class="decision-choice">
+                <label><input type="radio" name="fasDecision" value="approved" data-role-field="fas" disabled> Approved</label>
+                <label><input type="radio" name="fasDecision" value="rejected" data-role-field="fas" disabled> Rejected</label>
+              </div>
+            </div>
+            <div class="field"><label for="fasDate">Date<span class="opt">(fill Name first)</span></label><input type="date" id="fasDate" data-role-field="fas" disabled></div>
+          </div>
+        </div>
+
+        <div class="approval-block" data-role="accounting">
+          <h3>Accounting</h3>
+          <div class="row">
+            <div class="field"><label for="accountingName">Name<span class="opt">(optional)</span></label><input type="text" id="accountingName" data-role-name="accounting"></div>
+            <div class="field">
+              <label>Decision<span class="opt">(fill Name first)</span></label>
+              <div class="decision-choice">
+                <label><input type="radio" name="accountingDecision" value="approved" data-role-field="accounting" disabled> Approved</label>
+                <label><input type="radio" name="accountingDecision" value="rejected" data-role-field="accounting" disabled> Rejected</label>
+              </div>
+            </div>
+            <div class="field"><label for="accountingDate">Date<span class="opt">(fill Name first)</span></label><input type="date" id="accountingDate" data-role-field="accounting" disabled></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="submit-bar">
+        <button type="submit" class="primary" id="submitBtn">Submit Request</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Success modal -->
+  <div class="modal-overlay" id="successModal">
+    <div class="modal-box">
+      <div class="modal-icon">✓</div>
+      <h3>Request Submitted</h3>
+      <p id="modalBody"></p>
+      <div class="modal-actions">
+        <a href="#" id="modalDocxLink" target="_blank" class="modal-link">Open DOCX</a>
+        <a href="#" id="modalPdfLink" target="_blank" class="modal-link">Open PDF</a>
+      </div>
+      <button type="button" class="primary" id="modalCloseBtn">Done</button>
+    </div>
+  </div>
+
+  <?!= include('FormScript'); ?>
+</body>
+</html>

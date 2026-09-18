@@ -1,0 +1,136 @@
+<script>
+  var APPROVAL_KEYS = ['bm', 'category', 'it', 'ba', 'fas', 'accounting'];
+  var APPROVAL_LABELS = {
+    bm: 'BM / DBM Manager', category: 'Category', it: 'IT',
+    ba: 'BA', fas: 'FAS', accounting: 'Accounting'
+  };
+
+  // Lock (disable) a role's Decision + Date fields until its Name field has text.
+  function syncRoleLock(key) {
+    var nameEl = document.querySelector('[data-role-name="' + key + '"]');
+    var hasName = nameEl && nameEl.value.trim().length > 0;
+    var fields = document.querySelectorAll('[data-role-field="' + key + '"]');
+    fields.forEach(function (el) {
+      el.disabled = !hasName;
+      if (!hasName) {
+        if (el.type === 'radio') el.checked = false;
+        else el.value = '';
+      }
+    });
+  }
+
+  APPROVAL_KEYS.forEach(function (key) {
+    var nameEl = document.querySelector('[data-role-name="' + key + '"]');
+    if (nameEl) nameEl.addEventListener('input', function () { syncRoleLock(key); });
+    syncRoleLock(key); // set initial locked state
+  });
+
+  document.getElementById('requestForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    hideMsgs();
+
+    // Backstop: block submission if any role ended up with a decision/date but no name
+    // (shouldn't be reachable via the UI since those fields are disabled, but guards
+    // against edge cases like re-enabling via devtools).
+    for (var i = 0; i < APPROVAL_KEYS.length; i++) {
+      var key = APPROVAL_KEYS[i];
+      var name = val(key + 'Name');
+      var decision = radioValue(key + 'Decision');
+      var date = val(key + 'Date');
+      if (!name && (decision || date)) {
+        showError('Please enter a Name for ' + APPROVAL_LABELS[key] + ' before setting a Decision or Date.');
+        return;
+      }
+    }
+
+    var btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.textContent = 'Submitting…';
+
+    var payload = {
+      storeCode: val('storeCode'),
+      requestDate: val('requestDate'),
+      targetGoLiveDate: val('targetGoLiveDate'),
+      requestedBy: val('requestedBy'),
+
+      peakHourTransactions: val('peakHourTransactions'),
+      targetHourlyCapacity: val('targetHourlyCapacity'),
+      avgQueueTime: val('avgQueueTime'),
+      expectedQueueTime: val('expectedQueueTime'),
+      estMonthlyRevenue: val('estMonthlyRevenue'),
+      projectedRevenueIncrease: val('projectedRevenueIncrease'),
+      alternativeSolutions: val('alternativeSolutions'),
+
+      counterSpace: checked('counterSpace'),
+      acPowerOutlet: checked('acPowerOutlet'),
+      lanPort: checked('lanPort'),
+
+      amName: val('amName'),
+      amDate: val('amDate')
+    };
+
+    APPROVAL_KEYS.forEach(function (key) {
+      payload[key + 'Name'] = val(key + 'Name');
+      payload[key + 'Decision'] = radioValue(key + 'Decision');
+      payload[key + 'Date'] = val(key + 'Date');
+    });
+
+    google.script.run
+      .withSuccessHandler(function (result) {
+        btn.disabled = false;
+        btn.textContent = 'Submit Request';
+        if (result.success) {
+          document.getElementById('requestForm').reset();
+          APPROVAL_KEYS.forEach(syncRoleLock); // re-lock all role fields after reset
+          showSuccessModal(result);
+        } else {
+          showError(result.error || 'Something went wrong.');
+        }
+      })
+      .withFailureHandler(function (err) {
+        btn.disabled = false;
+        btn.textContent = 'Submit Request';
+        showError(err.message || String(err));
+      })
+      .submitRequest(payload);
+  });
+
+  function val(id) {
+    var el = document.getElementById(id);
+    return el ? el.value : '';
+  }
+
+  function checked(id) {
+    var el = document.getElementById(id);
+    return el ? el.checked : false;
+  }
+
+  function radioValue(name) {
+    var el = document.querySelector('input[name="' + name + '"]:checked');
+    return el ? el.value : '';
+  }
+
+  function showSuccessModal(result) {
+    document.getElementById('modalBody').textContent =
+      'Request ' + result.id + ' was submitted successfully.';
+    document.getElementById('modalDocxLink').href = result.docxUrl;
+    document.getElementById('modalPdfLink').href = result.pdfUrl;
+    document.getElementById('successModal').classList.add('show');
+  }
+
+  document.getElementById('modalCloseBtn').addEventListener('click', function () {
+    document.getElementById('successModal').classList.remove('show');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  function showError(message) {
+    var box = document.getElementById('errorMsg');
+    box.textContent = 'Submission failed: ' + message;
+    box.classList.add('show');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function hideMsgs() {
+    document.getElementById('errorMsg').classList.remove('show');
+  }
+</script>

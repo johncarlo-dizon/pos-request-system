@@ -1,0 +1,69 @@
+<script>
+  var ALL_RECORDS = [];
+
+  function loadRecords() {
+    google.script.run
+      .withSuccessHandler(function (records) {
+        ALL_RECORDS = records || [];
+        render();
+      })
+      .withFailureHandler(function (err) {
+        document.getElementById('tableBody').innerHTML =
+          '<tr><td colspan="6" class="empty">Failed to load: ' + (err.message || err) + '</td></tr>';
+      })
+      .getAllRequests();
+  }
+
+  function render() {
+    var query = document.getElementById('searchBox').value.trim().toLowerCase();
+    var status = document.getElementById('statusFilter').value;
+
+    var filtered = ALL_RECORDS.filter(function (r) {
+      var matchesQuery = !query ||
+        (r.id || '').toLowerCase().indexOf(query) !== -1 ||
+        (r.storeCode || '').toLowerCase().indexOf(query) !== -1 ||
+        (r.requestedBy || '').toLowerCase().indexOf(query) !== -1;
+      var matchesStatus = !status || r.status === status;
+      return matchesQuery && matchesStatus;
+    });
+
+    var tbody = document.getElementById('tableBody');
+
+    if (filtered.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="6" class="empty">No matching records.</td></tr>';
+    } else {
+      tbody.innerHTML = filtered.map(rowHtml).join('');
+    }
+
+    document.getElementById('countLabel').textContent =
+      filtered.length + ' of ' + ALL_RECORDS.length + ' record(s)';
+  }
+
+  function rowHtml(r) {
+    var badgeClass = (r.status === 'Submitted' || r.status === 'Generated') ? r.status : 'default';
+    var links = '';
+    if (r.docxUrl) links += '<a href="' + r.docxUrl + '" target="_blank">DOCX</a>';
+    if (r.pdfUrl) links += '<a href="' + r.pdfUrl + '" target="_blank">PDF</a>';
+    if (!links) links = '<span style="color:#94a3b8;">Generating…</span>';
+
+    return '<tr>' +
+      '<td>' + escapeHtml(r.id) + '</td>' +
+      '<td>' + escapeHtml(r.storeCode) + '</td>' +
+      '<td>' + escapeHtml(r.requestedBy) + '</td>' +
+      '<td>' + escapeHtml(r.requestDate) + '</td>' +
+      '<td><span class="badge ' + badgeClass + '">' + escapeHtml(r.status || '—') + '</span></td>' +
+      '<td class="doclinks">' + links + '</td>' +
+      '</tr>';
+  }
+
+  function escapeHtml(str) {
+    if (str === undefined || str === null) return '';
+    return String(str)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  document.getElementById('searchBox').addEventListener('input', render);
+  document.getElementById('statusFilter').addEventListener('change', render);
+
+  loadRecords();
+</script>
